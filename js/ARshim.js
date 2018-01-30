@@ -71,12 +71,18 @@ function init() {
 const ARVIEWER_PACKAGE = 'com.sec.android.app.sbrowser.arviewer';
 const ARVIEWER_SCHEME = 'arviewer';
 
+var useFallbackUrl = false;
+
 // format:
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;S.browser_fallback_url=http%3A%2F%2Fzxing.org;end
 function createIntentURI(uri, id) {
-  var encodedUri = encodeURI(uri);
-  return 'intent://'+id+'#Intent;scheme='+ARVIEWER_SCHEME+';package='+ARVIEWER_PACKAGE+'S.browser_fallback_url='+encodedUri+';end';
+  var uri = 'intent://'+id+'#Intent;scheme='+ARVIEWER_SCHEME+';package='+ARVIEWER_PACKAGE+';end';
+  if (useFallbackUrl) {
+    var encodedUri = encodeURI(uri);
+    uri += 'S.browser_fallback_url='+encodedUri;
+  }
+  return uri;
 }
 
 window.onload = init;
