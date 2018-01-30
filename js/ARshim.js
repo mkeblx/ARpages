@@ -56,10 +56,9 @@ function init() {
 
     var data = {};
     data.href = el.getAttribute('href');
-    var id = data.href.split('/').pop();
-    data.id = id
+    data.id = data.href.split('/').pop();
     data.scale = el.getAttribute('data-scale');
-    var intentUrl = createIntentURI(id);
+    var intentUrl = createIntentURI(data.href, data.id);
     data.intentUrl = intentUrl;
 
     console.log(data);
@@ -75,8 +74,9 @@ const ARVIEWER_SCHEME = 'arviewer';
 // format:
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;S.browser_fallback_url=http%3A%2F%2Fzxing.org;end
-function createIntentURI(uri, params) {
-  return 'intent://'+uri+'#Intent;scheme='+ARVIEWER_SCHEME+';package='+ARVIEWER_PACKAGE+'S.browser_fallback_url=http%3A%2F%2Fzxing.org;end';
+function createIntentURI(uri, id) {
+  var encodedUri = encodeURI(uri);
+  return 'intent://'+id+'#Intent;scheme='+ARVIEWER_SCHEME+';package='+ARVIEWER_PACKAGE+'S.browser_fallback_url='+encodedUri+';end';
 }
 
 window.onload = init;
