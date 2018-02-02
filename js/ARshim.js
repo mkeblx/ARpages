@@ -35,7 +35,7 @@ function androidVersion() {
 // Android N +
 function supportsARCore() {
   const ARCORE_VERSION_MIN = 7.0; // N
-  var OSSupport = androidVersion > ARCORE_VERSION_MIN;
+  var OSSupport = androidVersion() > ARCORE_VERSION_MIN;
   var deviceValid = true; // TODO: fill out
   return OSSupport && deviceValid;
 }
@@ -45,6 +45,11 @@ function init() {
   console.log('isSI: ' + isSI);
   console.log('android: ' + androidVersion());
   console.log('ARCore support: ' + supportsARCore());
+
+  if (!supportsARCore()) {
+    // console.log('Exiting processing... does not support Android/ARCore');
+    //return;
+  }
 
   // process
   // TODO: modify selector
@@ -63,7 +68,15 @@ function init() {
 
     console.log(data);
 
-    el.setAttribute('href', intentUrl);
+    // TODO: move outside loop
+    if (supportsARCore()) {
+      el.setAttribute('href', intentUrl);
+    } else {
+      el.onclick = function(){
+          alert('On supported Android setup will launch AR view');
+          return false;
+        };
+    }
   }
 
 }
