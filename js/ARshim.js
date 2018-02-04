@@ -35,7 +35,7 @@ function androidVersion() {
 // Android N +
 function supportsARCore() {
   const ARCORE_VERSION_MIN = 7.0; // N
-  var OSSupport = androidVersion() > ARCORE_VERSION_MIN;
+  var OSSupport = androidVersion() >= ARCORE_VERSION_MIN;
   var deviceValid = true; // TODO: fill out
   return OSSupport && deviceValid;
 }
