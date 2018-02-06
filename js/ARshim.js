@@ -63,7 +63,8 @@ function init() {
     data.href = el.getAttribute('href');
     data.id = data.href.split('/').pop();
     data.scale = el.getAttribute('data-scale');
-    var intentUrl = createIntentURI(data.href, data.id);
+
+    var intentUrl = createIntentURI(data.href + '?scale=' + data.scale);
     data.intentUrl = intentUrl;
 
     console.log(data);
@@ -83,14 +84,16 @@ function init() {
 
 const ARVIEWER_PACKAGE = 'com.sec.android.app.sbrowser.arviewer';
 const ARVIEWER_SCHEME = 'arviewer';
+const POLY_DOMAIN = 'poly.google.com/view';
 
 var useFallbackUrl = false;
 
 // format:
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;S.browser_fallback_url=http%3A%2F%2Fzxing.org;end
-function createIntentURI(uri, id) {
-  var uri = 'intent://'+id+'#Intent;scheme='+ARVIEWER_SCHEME+';package='+ARVIEWER_PACKAGE+';end';
+function createIntentURI(url) {
+  var _url = url.replace(/^https?:\/\//,'');
+  var uri = 'intent://'+_url+'#Intent;scheme='+ARVIEWER_SCHEME+';package='+ARVIEWER_PACKAGE+';end';
   if (useFallbackUrl) {
     var encodedUri = encodeURI(uri);
     uri += 'S.browser_fallback_url='+encodedUri;
