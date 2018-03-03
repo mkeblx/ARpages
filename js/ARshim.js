@@ -64,7 +64,7 @@ function init() {
     data.id = data.href.split('/').pop();
     data.scale = el.getAttribute('data-scale');
 
-    var intentUrl = createIntentURI(data.href + '?scale=' + data.scale);
+    var intentUrl = createARViewerIntentURI(data.href + '?scale=' + data.scale);
     data.intentUrl = intentUrl;
 
     console.log(data);
@@ -86,19 +86,32 @@ const ARVIEWER_PACKAGE = 'com.sec.android.app.sbrowser.arviewer';
 const ARVIEWER_SCHEME = 'arviewer';
 const POLY_DOMAIN = 'poly.google.com/view';
 
+const WEBAR_PACKAGE = 'org.chromium.android_webview.shell';
+const WEBAR_SCHEME = 'webar';
+
 var useFallbackUrl = false;
 
 // format:
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;S.browser_fallback_url=http%3A%2F%2Fzxing.org;end
-function createIntentURI(url) {
+function createIntentURI(url, scheme, package) {
   var _url = url.replace(/^https?:\/\//,'');
-  var uri = 'intent://'+_url+'#Intent;scheme='+ARVIEWER_SCHEME+';package='+ARVIEWER_PACKAGE+';end';
+  var uri = 'intent://'+_url+'#Intent;scheme='+scheme+';package='+package+';end';
   if (useFallbackUrl) {
     var encodedUri = encodeURI(uri);
     uri += 'S.browser_fallback_url='+encodedUri;
   }
   return uri;
+}
+
+function createARViewerIntentURI(url) {
+  return createIntentURI(url, ARVIEWER_SCHEME, ARVIEWER_PACKAGE);
+}
+
+// for WebARonARCore chromium build
+// https://github.com/google-ar/WebARonARCore
+function createWebARIntentURI(url) {
+  return createIntentURI(url, WEBAR_SCHEME, WEBAR_PACKAGE);
 }
 
 window.onload = init;
