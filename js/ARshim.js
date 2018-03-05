@@ -50,7 +50,9 @@ function init() {
     // console.log('Exiting processing... does not support Android/ARCore');
     //return;
   }
+}
 
+function process() {
   // process
   // TODO: modify selector
   var els = document.querySelectorAll('a[data-model]');
@@ -64,7 +66,12 @@ function init() {
     data.id = data.href.split('/').pop();
     data.scale = el.getAttribute('data-scale');
 
-    var intentUrl = createARViewerIntentURI(data.href + '?scale=' + data.scale);
+    var intentUrl;
+    if (hasParam('webar')) {
+      intentUrl = createWebARIntentURI(data.href + '?scale=' + data.scale);
+    } else {
+      intentUrl = createARViewerIntentURI(data.href + '?scale=' + data.scale);
+    }
     data.intentUrl = intentUrl;
 
     console.log(data);
@@ -72,6 +79,8 @@ function init() {
     // TODO: move outside loop
     if (supportsARCore()) {
       el.setAttribute('href', intentUrl);
+    } else if (hasParam('webar')) {
+      el.setAttribute('href', 'viewer.html?url=' + encodeURIComponent(data.href));
     } else {
       el.onclick = function(){
           alert('On supported Android setup will launch AR view');
@@ -79,7 +88,11 @@ function init() {
         };
     }
   }
+}
 
+function hasParam(key) {
+  var url = new URL(window.location.href);
+  return url.searchParams.has(key);
 }
 
 const ARVIEWER_PACKAGE = 'com.sec.android.app.sbrowser.arviewer';
@@ -111,9 +124,16 @@ function createARViewerIntentURI(url) {
 // for WebARonARCore chromium build
 // https://github.com/google-ar/WebARonARCore
 function createWebARIntentURI(url) {
+  var site = 'https://mkeblx.github.io/ARpages/';
+  url = site + 'viewer.html?url=' + encodeURIComponent(url);
   return createIntentURI(url, WEBAR_SCHEME, WEBAR_PACKAGE);
 }
 
-window.onload = init;
+window.createIntentURI = createIntentURI;
+window.createWebARIntentURI = createWebARIntentURI;
+window.createARViewerIntentURI = createARViewerIntentURI;
+
+init();
+window.onload = process;
 
 })();

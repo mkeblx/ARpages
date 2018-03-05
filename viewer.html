@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title>AR Model Viewer</title>
+<style>
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: sans-serif;
+}
+</style>
+</head>
+<body>
+<h1>AR Model Viewer</h1>
+<div id="stat">hi</div>
+<!--
+Displays a glTF model in AR
+-->
+<script src="js/ARshim.js"></script>
+<script>
+'use strict';
+
+var stat = document.getElementById('stat');
+
+function init() {
+	var _url = window.location.href;
+
+	if (!hasParam('url')) {
+		stat.textContent = 'No URL parameter';
+		return;
+	}
+
+	var url = getParam(_url, 'url');
+
+	stat.textContent = url;
+
+	if (is_glTFUrl(url)) {
+		load_glTF(url);
+	} else if (isPolyUrl(url)) {
+		var id = getPolyId(url);
+		loadPoly(id);
+	} else {
+		// unsupported
+	}
+}
+
+var site = 'viewer.html';
+
+function createModelUrl(url) {
+	var encoded = encodeURIComponent(url);
+	return site + '?url=' + encoded;
+}
+
+function hasParam(key) {
+  var url = new URL(window.location.href);
+  return url.searchParams.has(key);
+}
+
+function getParam(url, key) {
+	var url = new URL(url);
+	var value = url.searchParams.get(key);
+  if (value === null)
+    return null;
+	value = decodeURIComponent(value);
+	return value;
+}
+
+function is_glTFUrl(url) {
+	return false;
+}
+
+// load glTF .glb
+function load_glTF(url) {
+
+}
+
+function isPolyUrl(url) {
+	return (url.includes('poly'));
+}
+
+// format: https://poly.google.com/view/ID
+function getPolyId(url) {
+	var parts = url.split('/');
+	var id = parts[parts.length-1];
+	return id;
+}
+
+function loadPoly(id) {
+	console.log('Load Poly model: ' + id);
+}
+
+init();
+</script>
+</body>
+</html>
