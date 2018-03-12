@@ -68,7 +68,10 @@ function process() {
 
     var intentUrl;
     if (hasParam('webar')) {
-      intentUrl = createWebARIntentURI(data.href + '?scale=' + data.scale);
+      let href = data.href;
+      if (data.scale)
+        href += '&scale=' + data.scale;
+      intentUrl = createWebARIntentURI(data.href);
     } else {
       intentUrl = createARViewerIntentURI(data.href + '?scale=' + data.scale);
     }
