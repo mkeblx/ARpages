@@ -53,6 +53,7 @@ function init() {
 }
 
 function process() {
+  console.log('process');
   // process
   // TODO: modify selector
   var els = document.querySelectorAll('a[data-model]');
@@ -63,15 +64,16 @@ function process() {
 
     var data = {};
     data.href = el.getAttribute('href');
-    data.id = data.href.split('/').pop();
+    // data.id = data.href.split('/').pop(); Poly
     data.scale = el.getAttribute('data-scale');
 
     var intentUrl;
     if (hasParam('webar')) {
-      let href = data.href;
+      let params = {};
       if (data.scale)
-        href += '&scale=' + data.scale;
-      intentUrl = createWebARIntentURI(data.href);
+        params['scale'] = data.scale;
+      let url = createViewerUrl(data.href, params, false);
+      intentUrl = createWebARIntentURI(url);
     } else {
       intentUrl = createARViewerIntentURI(data.href + '?scale=' + data.scale);
     }
@@ -83,7 +85,7 @@ function process() {
     if (supportsARCore()) {
       el.setAttribute('href', intentUrl);
     } else if (hasParam('webar')) {
-      el.setAttribute('href', 'viewer.html?url=' + encodeURIComponent(data.href));
+      el.setAttribute('href', createViewerUrl(data.href, { scale: data.scale }, true));
     } else {
       el.onclick = function(){
           alert('On supported Android setup will launch AR view');
@@ -97,6 +99,21 @@ function hasParam(key) {
   var url = new URL(window.location.href);
   return url.searchParams.has(key);
 }
+
+var site = 'https://mkeblx.github.io/ARpages/';
+function createViewerUrl(modelUrl, params, relative) {
+  var queryStringParts = [];
+  queryStringParts.push( 'url=' + encodeURIComponent(modelUrl) );
+  for (let key in params) {
+    queryStringParts.push( key + '=' + encodeURIComponent(params[key]) );
+  }
+  url = 'viewer.html?' + queryStringParts.join('&');
+  if (!relative) {
+    url = site + url;
+  }
+  return url;
+}
+
 
 const ARVIEWER_PACKAGE = 'com.sec.android.app.sbrowser.arviewer';
 const ARVIEWER_SCHEME = 'arviewer';
@@ -127,8 +144,6 @@ function createARViewerIntentURI(url) {
 // for WebARonARCore chromium build
 // https://github.com/google-ar/WebARonARCore
 function createWebARIntentURI(url) {
-  var site = 'https://mkeblx.github.io/ARpages/';
-  url = site + 'viewer.html?url=' + encodeURIComponent(url);
   return createIntentURI(url, WEBAR_SCHEME, WEBAR_PACKAGE);
 }
 
