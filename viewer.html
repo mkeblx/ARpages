@@ -73,7 +73,7 @@ function init() {
     return;
   }
 
-  var url = getParam(_url, 'url');
+  var url = _getParam(_url, 'url');
 
   console.log('URL is: ' + url);
 
@@ -84,10 +84,12 @@ function init() {
   if (is_glTFUrl(url)) {
     load_glTF(url);
   } else if (isPolyUrl(url)) {
+    console.log('Poly model');
     var id = getPolyId(url);
     loadPoly(id);
   } else {
     // unsupported
+    console.log('unsupported');
   }
 }
 
@@ -110,6 +112,22 @@ function getParam(url, key) {
     return null;
   value = decodeURIComponent(value);
   return value;
+}
+
+// getParam wasn't working on WebARonARCore, Chromium 57
+// probably due to URL support
+function _getParam(url, key) {
+  var query = location.search;
+  var params = {};
+  query = query.slice(1); // remove '?'
+  var _params = query.split('&');
+  for (var i = 0; i < _params.length; i++) {
+    var _param = _params[i];
+    var parts = _param.split('=');
+    params[parts[0]] = decodeURIComponent(parts[1]);
+  }
+  console.log(params);
+  return params[key];
 }
 
 function is_glTFUrl(url) {
@@ -136,6 +154,7 @@ function load_glTF(url) {
       console.log(gltf);
       scene.add( gltf.scene );
     } );
+
 }
 
 function isPolyUrl(url) {
