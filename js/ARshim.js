@@ -100,14 +100,14 @@ function hasParam(key) {
   return url.searchParams.has(key);
 }
 
-var site = 'https://mkeblx.github.io/ARpages/';
+var site = 'hhttps://mkeblx.github.io/gltfviewer/';
 function createViewerUrl(modelUrl, params, relative) {
   var queryStringParts = [];
   queryStringParts.push( 'url=' + encodeURIComponent(modelUrl) );
   for (let key in params) {
     queryStringParts.push( key + '=' + encodeURIComponent(params[key]) );
   }
-  url = 'viewer.html?' + queryStringParts.join('&');
+  url = '?' + queryStringParts.join('&');
   if (!relative) {
     url = site + url;
   }
