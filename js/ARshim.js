@@ -63,7 +63,7 @@ function process() {
     var el = els[i];
 
     var data = {};
-    data.href = el.getAttribute('href');
+    data.href = el.href; // getAttribute('href');
     // data.id = data.href.split('/').pop(); Poly
     data.scale = el.getAttribute('data-scale');
 
@@ -100,14 +100,14 @@ function hasParam(key) {
   return url.searchParams.has(key);
 }
 
-var site = 'hhttps://mkeblx.github.io/gltfviewer/';
+var site = 'https://mkeblx.github.io/gltfviewer/';
 function createViewerUrl(modelUrl, params, relative) {
   var queryStringParts = [];
   queryStringParts.push( 'url=' + encodeURIComponent(modelUrl) );
   for (let key in params) {
     queryStringParts.push( key + '=' + encodeURIComponent(params[key]) );
   }
-  url = '?' + queryStringParts.join('&');
+  url = site + '?' + queryStringParts.join('&');
   if (!relative) {
     url = site + url;
   }
