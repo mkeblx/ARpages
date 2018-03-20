@@ -47,7 +47,10 @@ canvas {
     </a-assets>
 
     <a-entity id="model-container" position="0 1 0">
-      <a-entity gltf-model="#model"></a-entity>
+      <a-entity id="model-instance" gltf-model="#model"></a-entity>
+
+      <a-entity id="loading" text="value: loading...; color: black; align: center" scale="5 5 5"></a-entity>
+
       <a-box position="0 0 0" scale="0.1 0.1 0.1" rotation="0 45 0" color="#4CC3D9"></a-box>
     </a-entity>
 
@@ -64,9 +67,6 @@ canvas {
   <div id="stat">status</div>
 </div>
 
-<!--
-Displays a glTF model in VR
--->
 <script>
 'use strict';
 
@@ -81,14 +81,17 @@ var container;
 var controls;
 
 var model;
+var modelI;
 
+var loadingEl;
 
 function init() {
+  loadingEl = document.getElementById('loading');
+
   var _url = window.location.href;
 
   if (!hasParam('url')) {
     stat.textContent = 'No URL parameter';
-    return;
   }
 
   var url = getParam(_url, 'url');
@@ -97,20 +100,18 @@ function init() {
 
   stat.textContent = url;
 
+  var defaultUrl = 'https://mkeblx.github.io/ARpages/models/earth.gltf';
+  if (!url) {
+    url = defaultUrl;
+    console.log('Using default URL: ' + url);
+  } else {
+  }
 
   if (is_glTFUrl(url)) {
     load_glTF(url);
   } else {
-    // unsupported
     console.log('unsupported');
   }
-}
-
-var site = 'viewer.html';
-
-function createModelUrl(url) {
-  var encoded = encodeURIComponent(url);
-  return site + '?url=' + encoded;
 }
 
 function hasParam(key) {
@@ -128,14 +129,22 @@ function getParam(url, key) {
 }
 
 function is_glTFUrl(url) {
-  return url.endsWith('.gltf') || url.endsWith('.glb');
+  return url && (url.endsWith('.gltf') || url.endsWith('.glb'));
 }
 
 // load glTF .glb
 function load_glTF(url) {
-  console.log('Load glTF model: ' + url);
+  console.log('load glTF');
 
-  var modelAsset = document.querySelector('#model');
+  var modelAsset = document.getElementById('model');
+
+  modelI = document.getElementById('model-instance');
+
+  modelAsset.addEventListener('model-loaded', function(ev){
+    console.log('model-loaded');
+    loadingEl.parentNode.removeChild(loadingEl);
+  });
+
   modelAsset.setAttribute('src', url);
 }
 
