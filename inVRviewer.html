@@ -171,16 +171,21 @@ function init() {
   setupScreen();
 }
 
+var modelContainer = document.getElementById('model-container');
+
 function setupScreen() {
   var screen = document.getElementById('screen');
 
   document.addEventListener('keydown', function(event){
-    //console.log(event);
-    var L_key = 76;
-    if (event.keyCode === L_key) {
+    console.log(event);
+    var code = event.keyCode;
+    var L = 76;
+    var H = 72;
+    if (code === L) {
       console.log('Load/show model');
-      document.getElementById('model-container')
-        .setAttribute('visible', 'true');
+      modelContainer.setAttribute('visible', true);
+    } else if (code === H) {
+      modelContainer.setAttribute('visible', false);
     }
   });
 }
