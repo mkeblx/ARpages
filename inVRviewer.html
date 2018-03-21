@@ -49,7 +49,7 @@ canvas {
     </a-assets>
 
     <a-entity id="model-container" position="0 0 0" visible="false">
-      <a-entity id="model-instance" gltf-model="#model"></a-entity>
+      <a-entity id="model-instance" gltf-model="#model" scale="0.6 0.6 0.6"></a-entity>
 
       <a-entity id="loading" text="value: loading...; color: black; align: center" scale="5 5 5"></a-entity>
 
@@ -77,9 +77,11 @@ canvas {
           </a-plane>
         </a-entity>
       </a-entity>
+
       <a-entity id="main">
         <a-plane id="screen" position="0 0 0" rotation="0 0 0" width="2.8" height="2" color="white" material="src: #screen-src; repeat: 1 0.71; offset: 0 0.3"></a-plane>
       </a-entity>
+
       <a-entity id="right" position="1.9 0 0.2" rotation="0 -40 0">
         <a-entity id="opts">
           <a-plane id="opts1" width="0.8" height="2" transparent="true" color="#000010" opacity="0.6">
@@ -94,7 +96,15 @@ canvas {
 
     <a-sky src="#sky"></a-sky>
 
-    <a-entity camera="active: true" look-controls wasd-controls position="0 0 2.6" data-aframe-default-camera></a-entity>
+    <a-entity rotation="0 -10 0" position="-0.5 0 2.7">
+      <a-entity camera="active: true" look-controls wasd-controls  data-aframe-default-camera>
+        <a-entity id="cursor" cursor="fuse: false; fuseTimeout: 500"
+              position="0 0 -1"
+              geometry="primitive: ring; radiusInner: 0.014; radiusOuter: 0.02"
+              material="color: #000020; transparent: true; opacity: 0.7; shader: flat">
+        </a-entity>
+      </a-entity>
+    </a-entity>
 
   </a-scene>
 
@@ -121,6 +131,9 @@ var modelI;
 
 var loadingEl;
 
+var defaultUrl = 'https://mkeblx.github.io/ARpages/models/earth.gltf';
+var url;
+
 function init() {
   loadingEl = document.getElementById('loading');
 
@@ -130,13 +143,12 @@ function init() {
     stat.textContent = 'No URL parameter';
   }
 
-  var url = getParam(_url, 'url');
+  url = getParam(_url, 'url');
 
   console.log('URL is: ' + url);
 
   stat.textContent = url;
 
-  var defaultUrl = 'https://mkeblx.github.io/ARpages/models/earth.gltf';
   if (!url) {
     url = defaultUrl;
     console.log('Using default URL: ' + url);
@@ -144,10 +156,46 @@ function init() {
   }
 
   if (is_glTFUrl(url)) {
-    //load_glTF(url);
+    load_glTF(url);
   } else {
     console.log('unsupported');
   }
+
+  setupScreen();
+}
+
+function setupScreen() {
+  var screen = document.getElementById('screen');
+
+  document.addEventListener('keydown', function(event){
+    //console.log(event);
+    var L_key = 76;
+    if (event.keyCode === L_key) {
+      console.log('Load/show model');
+      document.getElementById('model-container')
+        .setAttribute('visible', 'true');
+    }
+  });
+}
+
+var r = 0;
+var modelContainer = document.getElementById('model-container');
+
+requestAnimationFrame(animate);
+
+function animate() {
+  rotateModel();
+
+  requestAnimationFrame(animate);
+}
+
+function rotateModel() {
+  modelContainer.setAttribute('rotation', '0 '+r+' 0');
+  r += 0.5;
+}
+
+function loadModel() {
+  load_glTF(url);
 }
 
 function hasParam(key) {
