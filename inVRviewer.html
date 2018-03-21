@@ -49,7 +49,14 @@ canvas {
     </a-assets>
 
     <a-entity id="model-container" position="0 0 0" visible="false">
-      <a-entity id="model-instance" gltf-model="#model" scale="0.6 0.6 0.6"></a-entity>
+      <a-entity id="model-instance" gltf-model="#model" scale="0.6 0.6 0.6">
+        <a-animation attribute="rotation"
+          easing="linear"
+          dur="20000"
+          fill="forwards"
+          to="0 360 0"
+          repeat="indefinite"></a-animation>
+      </a-entity>
 
       <a-entity id="loading" text="value: loading...; color: black; align: center" scale="5 5 5"></a-entity>
 
@@ -181,18 +188,6 @@ function setupScreen() {
 var r = 0;
 var modelContainer = document.getElementById('model-container');
 
-requestAnimationFrame(animate);
-
-function animate() {
-  rotateModel();
-
-  requestAnimationFrame(animate);
-}
-
-function rotateModel() {
-  modelContainer.setAttribute('rotation', '0 '+r+' 0');
-  r += 0.5;
-}
 
 function loadModel() {
   load_glTF(url);
