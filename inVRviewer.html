@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>In VR Model Viewer</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+#info {
+  position: absolute;
+  color: white;
+  padding: 5px;
+}
+#info h1 {
+  margin: 0 0;
+  font-size: 18px;
+}
+#container {
+
+}
+#stat {
+  display: block;
+}
+canvas {
+  width: 100%;
+  height: 100%;
+}
+</style>
+
+<script src="js/aframe.min.js"></script>
+
+</head>
+<body>
+
+  <a-scene>
+    <a-assets>
+      <a-asset-item id="model" src=""></a-asset-item>
+      <img id="sky" src="textures/si-background.jpg" />
+      <img id="screen-src" src="textures/planets-screen.png" />
+    </a-assets>
+
+    <a-entity id="model-container" position="0 0 0" visible="false">
+      <a-entity id="model-instance" gltf-model="#model"></a-entity>
+
+      <a-entity id="loading" text="value: loading...; color: black; align: center" scale="5 5 5"></a-entity>
+
+      <a-box position="0 0 0" scale="0.1 0.1 0.1" rotation="0 45 0" color="#4CC3D9"></a-box>
+    </a-entity>
+
+    <a-entity id="browser" position="0 0 0">
+      <a-entity id="left" position="0 0 0">
+        <a-entity id="tabs">
+
+        </a-entity>
+      </a-entity>
+      <a-entity id="main">
+        <a-plane id="screen" position="0 0 0" rotation="0 0 0" width="2.8" height="2" color="white" material="src: #screen-src; repeat: 1 0.71;"></a-plane>
+      </a-entity>
+      <a-entity id="right">
+
+      </a-entity>
+    </a-entity>
+
+    <a-plane id="ground" position="0 0 0" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+
+    <a-sky src="#sky"></a-sky>
+
+    <a-entity camera="active: true" look-controls wasd-controls position="0 0 2.5" data-aframe-default-camera></a-entity>
+
+  </a-scene>
+
+<div id="info">
+  <h1>AR Model Viewer</h1>
+  <div id="stat">status</div>
+</div>
+
+<script>
+'use strict';
+
+var stat = document.getElementById('stat');
+
+var scene;
+var camera;
+var renderer;
+
+var container;
+
+var controls;
+
+var model;
+var modelI;
+
+var loadingEl;
+
+function init() {
+  loadingEl = document.getElementById('loading');
+
+  var _url = window.location.href;
+
+  if (!hasParam('url')) {
+    stat.textContent = 'No URL parameter';
+  }
+
+  var url = getParam(_url, 'url');
+
+  console.log('URL is: ' + url);
+
+  stat.textContent = url;
+
+  var defaultUrl = 'https://mkeblx.github.io/ARpages/models/earth.gltf';
+  if (!url) {
+    url = defaultUrl;
+    console.log('Using default URL: ' + url);
+  } else {
+  }
+
+  if (is_glTFUrl(url)) {
+    //load_glTF(url);
+  } else {
+    console.log('unsupported');
+  }
+}
+
+function hasParam(key) {
+  var url = new URL(window.location.href);
+  return url.searchParams.has(key);
+}
+
+function getParam(url, key) {
+  var url = new URL(url);
+  var value = url.searchParams.get(key);
+  if (value === null)
+    return null;
+  value = decodeURIComponent(value);
+  return value;
+}
+
+function is_glTFUrl(url) {
+  return url && (url.endsWith('.gltf') || url.endsWith('.glb'));
+}
+
+// load glTF .glb
+function load_glTF(url) {
+  console.log('load glTF');
+
+  var modelAsset = document.getElementById('model');
+
+  modelI = document.getElementById('model-instance');
+
+  modelAsset.addEventListener('model-loaded', function(ev){
+    console.log('model-loaded');
+    loadingEl.parentNode.removeChild(loadingEl);
+  });
+
+  modelAsset.setAttribute('src', url);
+}
+
+init();
+</script>
+</body>
+</html>
