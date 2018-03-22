@@ -37,6 +37,7 @@ canvas {
 </style>
 
 <script src="js/aframe.min.js"></script>
+  <script src="js/aframe-animation-component.min.js"></script>
 
 </head>
 <body>
@@ -116,8 +117,25 @@ canvas {
 
     <a-sky src="#sky"></a-sky>
 
-    <a-entity rotation="0 -10 0" position="-0.5 0 2.7">
+    <a-entity id="camera-rig" rotation="0 -10 0" position="-0.5 0 2.7">
       <a-entity camera="active: true" look-controls wasd-controls  data-aframe-default-camera>
+        <a-plane id="fade" position="0 0 -0.5" width="1" height="1" visible="false" material="color: black; transparent: true; opacity: 0.01"
+          animation__fadein="property: material.opacity;
+                  dur: 600;
+                  from: 0.0;
+                  to: 1.0;
+                  loop: false;
+                  easing:linear;
+                  startEvents: fadein"
+          animation__fadeout="property: material.opacity;
+                  dur: 900;
+                  from: 1.0;
+                  to: 0.0;
+                  loop: false;
+                  easing:linear;
+                  startEvents: fadeout"
+          >
+        </a-plane>
         <a-entity id="cursor" cursor="fuse: false; fuseTimeout: 500"
               position="0 0 -1"
               geometry="primitive: ring; radiusInner: 0.014; radiusOuter: 0.02"
@@ -195,9 +213,9 @@ function setupScreen() {
     var L = 76;
     var H = 72;
     if (code === L) {
-      showViewerView();
+      toggleView();
     } else if (code === H) {
-      showMainView();
+      toggleView();
     }
   });
 }
@@ -205,7 +223,29 @@ function setupScreen() {
 var mainView = document.getElementById('main-view');
 var viewerView = document.getElementById('viewer-view');
 
+var fadeEl = document.getElementById('fade');
+
 // TODO: fade Views into place
+
+function toggleView() {
+  fadeEl.setAttribute('visible', true);
+
+  fadeEl.emit('fadein');
+  setTimeout(function(){
+
+    if (!viewerView.getAttribute('visible')) {
+      showViewerView();
+    } else {
+      showMainView();
+    }
+
+    fadeEl.emit('fadeout');
+    setTimeout(function(){
+      fadeEl.setAttribute('visible', false);
+    }, 900);
+
+  }, 1000);
+}
 
 function showViewerView() {
   viewerView.setAttribute('visible', true);
