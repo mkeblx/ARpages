@@ -48,58 +48,68 @@ canvas {
       <img id="screen-src" src="textures/planets-screen.png" />
     </a-assets>
 
-    <a-entity id="model-container" position="0 0 0" visible="false">
-      <a-entity id="model-instance" gltf-model="#model" scale="0.6 0.6 0.6">
-        <a-animation attribute="rotation"
-          easing="linear"
-          dur="20000"
-          fill="forwards"
-          to="0 360 0"
-          repeat="indefinite"></a-animation>
+    <!-- Primary browser view -->
+    <a-entity id="main-view" visible="true">
+
+      <a-entity id="browser" position="0 0 0">
+        <a-entity id="si-name" position="0 1.46 0" scale="2.5 2.5 2.5"
+          text="value: Samsung Internet; color: white; align: center;"></a-entity>
+
+        <a-entity id="top" position="0 1.17 0">
+          <a-entity id="url">
+            <a-plane id="url-bg" width="1.2" height="0.16" color="#000010" transparent="true" opacity="0.6">
+              <a-entity position="0 0 0" scale="1.5 1.5 1.5"
+          text="value: wikipedia.org/wiki/planets; color: white; align: center;"></a-entity>
+            </a-plane>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="left" position="-1.9 0 0.2" rotation="0 40 0">
+          <a-entity id="tabs">
+            <a-plane id="tab1" width="0.8" height="2" color="#000010" transparent="true" opacity="0.6">
+              <a-entity position="0.21 0.9 0" scale="1.5 1.5 1.5"
+          text="value: Tabs (4); color: white; align: center;"></a-entity>
+            </a-plane>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="main">
+          <a-plane id="screen" position="0 0 0" rotation="0 0 0" width="2.8" height="2" color="white" material="src: #screen-src; repeat: 1 0.71; offset: 0 0.3"></a-plane>
+        </a-entity>
+
+        <a-entity id="right" position="1.9 0 0.2" rotation="0 -40 0">
+          <a-entity id="opts">
+            <a-plane id="opts1" width="0.8" height="2" transparent="true" color="#000010" opacity="0.6">
+              <a-entity position="0.0 0.9 0" scale="1.5 1.5 1.5"
+                text="value: Quick Access                >; color: white; align: center;"></a-entity>
+            </a-plane>
+          </a-entity>
+        </a-entity>
       </a-entity>
 
-      <a-entity id="loading" text="value: loading...; color: black; align: center" scale="5 5 5"></a-entity>
+      <a-plane id="ground" position="0 0 0" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
 
-      <a-box position="0 0 0" scale="0.1 0.1 0.1" rotation="0 45 0" color="#4CC3D9"></a-box>
     </a-entity>
 
-    <a-entity id="browser" position="0 0 0">
-      <a-entity id="si-name" position="0 1.46 0" scale="2.5 2.5 2.5"
-        text="value: Samsung Internet; color: white; align: center;"></a-entity>
+    <!-- Model viewer view -->
+    <a-entity id="viewer-view" visible="false">
 
-      <a-entity id="top" position="0 1.17 0">
-        <a-entity id="url">
-          <a-plane id="url-bg" width="1.2" height="0.16" color="#000010" transparent="true" opacity="0.6">
-            <a-entity position="0 0 0" scale="1.5 1.5 1.5"
-        text="value: wikipedia.org/wiki/planets; color: white; align: center;"></a-entity>
-          </a-plane>
+      <a-entity id="model-container" position="0 0 0" visible="true">
+        <a-entity id="model-instance" gltf-model="#model" scale="0.6 0.6 0.6">
+          <a-animation attribute="rotation"
+            easing="linear"
+            dur="20000"
+            fill="forwards"
+            to="0 360 0"
+            repeat="indefinite"></a-animation>
         </a-entity>
+
+        <a-entity id="loading" text="value: loading...; color: black; align: center" scale="5 5 5"></a-entity>
+
+        <a-box position="0 0 0" scale="0.1 0.1 0.1" rotation="0 45 0" color="#4CC3D9"></a-box>
       </a-entity>
 
-      <a-entity id="left" position="-1.9 0 0.2" rotation="0 40 0">
-        <a-entity id="tabs">
-          <a-plane id="tab1" width="0.8" height="2" color="#000010" transparent="true" opacity="0.6">
-            <a-entity position="0.21 0.9 0" scale="1.5 1.5 1.5"
-        text="value: Tabs (4); color: white; align: center;"></a-entity>
-          </a-plane>
-        </a-entity>
-      </a-entity>
-
-      <a-entity id="main">
-        <a-plane id="screen" position="0 0 0" rotation="0 0 0" width="2.8" height="2" color="white" material="src: #screen-src; repeat: 1 0.71; offset: 0 0.3"></a-plane>
-      </a-entity>
-
-      <a-entity id="right" position="1.9 0 0.2" rotation="0 -40 0">
-        <a-entity id="opts">
-          <a-plane id="opts1" width="0.8" height="2" transparent="true" color="#000010" opacity="0.6">
-            <a-entity position="0.0 0.9 0" scale="1.5 1.5 1.5"
-              text="value: Quick Access                >; color: white; align: center;"></a-entity>
-          </a-plane>
-        </a-entity>
-      </a-entity>
     </a-entity>
-
-    <a-plane id="ground" position="0 0 0" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
 
     <a-sky src="#sky"></a-sky>
 
@@ -177,22 +187,32 @@ function setupScreen() {
   var screen = document.getElementById('screen');
 
   document.addEventListener('keydown', function(event){
-    console.log(event);
+    //console.log(event);
     var code = event.keyCode;
     var L = 76;
     var H = 72;
     if (code === L) {
-      console.log('Load/show model');
-      modelContainer.setAttribute('visible', true);
+      showViewerView();
     } else if (code === H) {
-      modelContainer.setAttribute('visible', false);
+      showMainView();
     }
   });
 }
 
-var r = 0;
-var modelContainer = document.getElementById('model-container');
+var mainView = document.getElementById('main-view');
+var viewerView = document.getElementById('viewer-view');
 
+// TODO: fade Views into place
+
+function showViewerView() {
+  viewerView.setAttribute('visible', true);
+  mainView.setAttribute('visible', false);
+}
+
+function showMainView() {
+  mainView.setAttribute('visible', true);
+  viewerView.setAttribute('visible', false);
+}
 
 function loadModel() {
   load_glTF(url);
