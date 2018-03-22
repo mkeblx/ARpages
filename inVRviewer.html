@@ -119,7 +119,7 @@ canvas {
 
     <a-entity id="camera-rig" rotation="0 -10 0" position="-0.5 0 2.7">
       <a-entity camera="active: true" look-controls wasd-controls  data-aframe-default-camera>
-        <a-plane id="fade" position="0 0 -0.5" width="1" height="1" visible="false" material="color: black; transparent: true; opacity: 0.01"
+        <a-plane id="fade" position="0 0 -0.5" width="2" height="2" visible="false" material="color: black; transparent: true; opacity: 0.01"
           animation__fadein="property: material.opacity;
                   dur: 600;
                   from: 0.0;
@@ -172,6 +172,8 @@ var loadingEl;
 var defaultUrl = 'https://mkeblx.github.io/ARpages/models/earth.gltf';
 var url;
 
+var transitioning = false;
+
 function init() {
   loadingEl = document.getElementById('loading');
 
@@ -212,6 +214,12 @@ function setupScreen() {
     var code = event.keyCode;
     var L = 76;
     var H = 72;
+
+    if (transitioning)
+      return;
+
+    transitioning = true;
+
     if (code === L) {
       toggleView();
     } else if (code === H) {
@@ -242,6 +250,9 @@ function toggleView() {
     fadeEl.emit('fadeout');
     setTimeout(function(){
       fadeEl.setAttribute('visible', false);
+
+      transitioning = false;
+
     }, 900);
 
   }, 1000);
