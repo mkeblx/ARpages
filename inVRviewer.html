@@ -37,7 +37,8 @@ canvas {
 </style>
 
 <script src="js/aframe.min.js"></script>
-  <script src="js/aframe-animation-component.min.js"></script>
+<script src="js/aframe-animation-component.min.js"></script>
+<script src="js/aframe-cubemap-component.min.js"></script>
 
 </head>
 <body>
@@ -115,7 +116,10 @@ canvas {
 
     </a-entity>
 
-    <a-sky src="#sky"></a-sky>
+    <!--<a-sky src="#sky"></a-sky>-->
+    <a-entity rotation="45 90 45">
+      <a-entity id="skybox" position="0 0 0" rotation="90 180 0" cubemap="folder:textures/skybox/; edgeLength: 50; ext: png"></a-entity>
+    </a-entity>
 
     <a-entity id="camera-rig" rotation="0 -10 0" position="-0.5 0 2.7">
       <a-entity camera="active: true" look-controls wasd-controls  data-aframe-default-camera>
