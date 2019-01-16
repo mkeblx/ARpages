@@ -88,7 +88,7 @@ function process() {
       el.setAttribute('href', createViewerUrl(data.href, { scale: data.scale }, true));
     } else {
       el.onclick = function(){
-          alert('On supported Android setup, will launch AR view');
+          alert('On supported Android setup will launch AR view');
           return false;
         };
     }
@@ -115,8 +115,8 @@ function createViewerUrl(modelUrl, params, relative) {
 }
 
 
-const ARVIEWER_PACKAGE = 'com.sec.android.app.sbrowser.xrview';
-const ARVIEWER_SCHEME = 'xrview';
+const ARVIEWER_PACKAGE = 'com.sec.android.app.sbrowser.arviewer';
+const ARVIEWER_SCHEME = 'arviewer';
 const POLY_DOMAIN = 'poly.google.com/view';
 
 const WEBAR_PACKAGE = 'org.chromium.android_webview.shell';
