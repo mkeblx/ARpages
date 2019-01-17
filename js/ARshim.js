@@ -55,13 +55,21 @@ function init() {
 
 function process() {
   console.log('process');
-  // process
-  // TODO: modify selector
-  var els = document.querySelectorAll('a[data-model]');
+  let modelLinks = [];
+  let links = document.querySelectorAll('a');
+  console.log(links);
+  for (let i = 0; i < links.length; i++) {
+    let link = links[i];
+    let href = link.href.toLowerCase();
+    if (href.includes('.gltf') || href.includes('.glb')) {
+      modelLinks.push(link);
+    }
+  }
+  console.log(modelLinks.length + ' models found');
 
   // modify links
-  for (var i = 0; i < els.length; i++) {
-    var el = els[i];
+  for (let i = 0; i < modelLinks.length; i++) {
+    let el = modelLinks[i];
 
     var data = {};
     data.href = el.href; // getAttribute('href');
@@ -88,6 +96,7 @@ function process() {
     } else if (hasParam('webar')) {
       el.setAttribute('href', createViewerUrl(data.href, { scale: data.scale }, true));
     } else {
+      el.setAttribute('data-intent', intentUrl);
       el.onclick = function(){
           alert('On supported Android setup, will launch AR view');
           return false;
@@ -185,7 +194,7 @@ function addXRButton() {
     `;
   document.body.appendChild(style);
 
-  let body = document. getElementsByTagName("body")[0];
+  let body = document. getElementsByTagName('body')[0];
   body.appendChild(xrButton);
 
   let modelLinks = [];
@@ -210,10 +219,11 @@ function addXRButton() {
 
     xrButton.addEventListener('click', function(e){
       let href = modelLink.href;
-      //if (modelLink.dataset.scale)
-      // href += '?'+'scale='+modelLink.dataset.scale;
+      if (modelLink.dataset.scale)
+       href += '?'+'scale='+modelLink.dataset.scale;
       let intentUrl = createARViewerIntentURI(href);
       console.log('Go to: ' + intentUrl);
+      console.log('Equal:', intentUrl == modelLink.dataset.intent);
       window.location.href = intentUrl;
     });
   } else {
