@@ -209,7 +209,12 @@ function addXRButton() {
     }, 4000);
 
     xrButton.addEventListener('click', function(e){
-      modelLink.click();
+      let href = modelLink.href;
+      if (modelLink.dataset.scale)
+        href += '?'+'scale='+modelLink.dataset.scale;
+      let intentUrl = createARViewerIntentURI(href);
+      console.log('Go to: ' + intentUrl);
+      window.location.href = intentUrl;
     });
   } else {
     console.log('No GLTF model links found');
