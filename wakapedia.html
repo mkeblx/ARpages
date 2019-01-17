@@ -66,7 +66,7 @@ p {
   margin: 6px 0;
 }
 
-#xr-button {
+#sxr-button {
   width: 54px;
   height: 54px;
   font-size: 22px;
@@ -83,6 +83,9 @@ p {
   display: none;
   z-index: 1000;
 }
+#sxr-button:hover {
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -91,10 +94,6 @@ p {
   <h1>Wakapedia</h1>
 
   <h3>Animals of the day</h3>
-
-  <div id="xr-button">
-    AR
-  </div>
 
   <div class="animal">
     <h4>Badger</h4>
@@ -133,16 +132,40 @@ p {
 <script>
 'use strict';
 
-let xrButton = document.getElementById('xr-button');
+function addXRButton() {
+  let xrButton = document.createElement('div');
+  xrButton.id = 'sxr-button';
+  xrButton.innerHTML = 'AR';
+  let body = document. getElementsByTagName("body")[0];
+  body.appendChild(xrButton);
 
-setTimeout(function(){
-  xrButton.style.display = 'block';
-}, 5000);
+  let modelLink = null;
+  let links = document.querySelectorAll('a');
+  console.log(links);
+  for (let i = 0; i < links.length; i++) {
+    let link = links[i];
+    let href = link.href.toLowerCase();
+    if (href.includes('.gltf') || href.includes('.glb')) {
+      console.log('gltf model found');
+      modelLink = link;
+      break;
+    }
+  }
 
-xrButton.addEventListener('click', function(e){
-  let link = document.querySelector('.animal a');
-  link.click();
-});
+  if (modelLink) {
+    setTimeout(function(){
+      xrButton.style.display = 'block';
+    }, 4000)
+
+    xrButton.addEventListener('click', function(e){
+      modelLink.click();
+    });
+  } else {
+    console.log('No GLTF model links found');
+  }
+}
+
+window.addEventListener('load', addXRButton);
 </script>
 
 </body>
