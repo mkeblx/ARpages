@@ -210,8 +210,8 @@ function addXRButton() {
 
     xrButton.addEventListener('click', function(e){
       let href = modelLink.href;
-      if (modelLink.dataset.scale)
-        href += '?'+'scale='+modelLink.dataset.scale;
+      //if (modelLink.dataset.scale)
+      // href += '?'+'scale='+modelLink.dataset.scale;
       let intentUrl = createARViewerIntentURI(href);
       console.log('Go to: ' + intentUrl);
       window.location.href = intentUrl;
