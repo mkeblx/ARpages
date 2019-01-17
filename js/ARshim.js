@@ -61,7 +61,6 @@ function process() {
   // skip as SXR will natively handle or inject own script
   if (isSXR)
     return;
-  alert(isSXR);
 
   let modelLinks = [];
   let links = document.querySelectorAll('a');
