@@ -153,6 +153,32 @@ function addXRButton() {
   let xrButton = document.createElement('div');
   xrButton.id = 'sxr-button';
   xrButton.innerHTML = 'AR';
+
+  let style = document.createElement('style');
+  style.innerHTML = `
+    #sxr-button {
+      width: 54px;
+      height: 54px;
+      font-size: 22px;
+      font-weight: normal;
+      background-color: #706cf5;
+      text-align: center;
+      padding-top: 14px;
+      color: white;
+      border-radius: 27px;
+      box-shadow: 0px 0px 15px black;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      z-index: 1000;
+    }
+    #sxr-button:hover {
+      cursor: pointer;
+    }
+    `;
+  document.body.appendChild(style);
+
   let body = document. getElementsByTagName("body")[0];
   body.appendChild(xrButton);
 
@@ -170,6 +196,7 @@ function addXRButton() {
 
   if (modelLinks.length) {
     let modelLink = modelLinks[0];
+
     setTimeout(function(){
       xrButton.style.display = 'block';
       console.log('XR button added to page');
