@@ -27,6 +27,7 @@ var ua = navigator.userAgent.toLowerCase();
 var isAndroid = ua.indexOf('android') > -1;
 var isMobile = ua.indexOf('mobile') > -1;
 var isSI = (ua.indexOf('samsungbrowser') > -1 && isMobile);
+var isSXR = ('SXR' in window);
 
 function androidVersion() {
   var match = ua.match(/android\s([0-9\.]*)/);
@@ -46,6 +47,7 @@ function init() {
   console.log('isSI: ' + isSI);
   console.log('android: ' + androidVersion());
   console.log('ARCore support: ' + supportsARCore());
+  console.log('SXR Browser: ' + isSXR);
 
   if (!supportsARCore()) {
     // console.log('Exiting processing... does not support Android/ARCore');
@@ -55,6 +57,11 @@ function init() {
 
 function process() {
   console.log('process');
+
+  // skip as SXR will natively handle or inject own script
+  if (isSXR)
+    return;
+
   let modelLinks = [];
   let links = document.querySelectorAll('a');
   console.log(links);
