@@ -19,6 +19,7 @@ TODO:
 */
 
 (function(){
+'use strict';
 
 var version = 0.2;
 
@@ -129,9 +130,9 @@ var useFallbackUrl = false;
 // format:
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end
 // intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;S.browser_fallback_url=http%3A%2F%2Fzxing.org;end
-function createIntentURI(url, scheme, package) {
+function createIntentURI(url, scheme, _package) {
   var _url = url.replace(/^https?:\/\//,'');
-  var uri = 'intent://'+_url+'#Intent;scheme='+scheme+';package='+package+';end';
+  var uri = 'intent://'+_url+'#Intent;scheme='+scheme+';package='+_package+';end';
   if (useFallbackUrl) {
     var encodedUri = encodeURI(uri);
     uri += 'S.browser_fallback_url='+encodedUri;
@@ -166,7 +167,7 @@ function addXRButton() {
       padding-top: 14px;
       color: white;
       border-radius: 27px;
-      box-shadow: 0px 0px 15px black;
+      box-shadow: 0px 2px 10px #333;
       position: fixed;
       bottom: 20px;
       right: 20px;
@@ -175,6 +176,11 @@ function addXRButton() {
     }
     #sxr-button:hover {
       cursor: pointer;
+      filter: brightness(110%);
+;
+    }
+    #sxr-button.disabled {
+      opacity: 0.8;
     }
     `;
   document.body.appendChild(style);
