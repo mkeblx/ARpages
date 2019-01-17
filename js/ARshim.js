@@ -160,7 +160,7 @@ function createWebARIntentURI(url) {
 }
 
 function addXRButton() {
-  let xrButton = document.createElement('div');
+  let xrButton = document.createElement('a');
   xrButton.id = 'sxr-button';
   xrButton.innerHTML = 'AR';
 
@@ -182,11 +182,11 @@ function addXRButton() {
       right: 20px;
       display: none;
       z-index: 1000;
+      text-decoration: none;
     }
     #sxr-button:hover {
       cursor: pointer;
       filter: brightness(110%);
-;
     }
     #sxr-button.disabled {
       opacity: 0.8;
@@ -217,14 +217,14 @@ function addXRButton() {
       console.log('XR button added to page');
     }, 4000);
 
+    let href = modelLink.href;
+    if (modelLink.dataset.scale)
+      href += '?'+'scale='+modelLink.dataset.scale;
+    let intentUrl = createARViewerIntentURI(href);
+    xrButton.setAttribute('href', intentUrl);
     xrButton.addEventListener('click', function(e){
-      let href = modelLink.href;
-      if (modelLink.dataset.scale)
-       href += '?'+'scale='+modelLink.dataset.scale;
-      let intentUrl = createARViewerIntentURI(href);
       console.log('Go to: ' + intentUrl);
       console.log('Equal:', intentUrl == modelLink.dataset.intent);
-      window.location.href = intentUrl;
     });
   } else {
     console.log('No GLTF model links found');
