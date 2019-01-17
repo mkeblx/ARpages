@@ -20,7 +20,7 @@ TODO:
 
 (function(){
 
-var version = 0.1;
+var version = 0.2;
 
 var ua = navigator.userAgent.toLowerCase();
 var isAndroid = ua.indexOf('android') > -1;
@@ -93,6 +93,8 @@ function process() {
         };
     }
   }
+
+  addXRButton();
 }
 
 function hasParam(key) {
@@ -147,11 +149,46 @@ function createWebARIntentURI(url) {
   return createIntentURI(url, WEBAR_SCHEME, WEBAR_PACKAGE);
 }
 
+function addXRButton() {
+  let xrButton = document.createElement('div');
+  xrButton.id = 'sxr-button';
+  xrButton.innerHTML = 'AR';
+  let body = document. getElementsByTagName("body")[0];
+  body.appendChild(xrButton);
+
+  let modelLinks = [];
+  let links = document.querySelectorAll('a');
+  console.log(links);
+  for (let i = 0; i < links.length; i++) {
+    let link = links[i];
+    let href = link.href.toLowerCase();
+    if (href.includes('.gltf') || href.includes('.glb')) {
+      modelLinks.push(link);
+    }
+  }
+  console.log(modelLinks.length + ' models found');
+
+  if (modelLinks.length) {
+    let modelLink = modelLinks[0];
+    setTimeout(function(){
+      xrButton.style.display = 'block';
+      console.log('XR button added to page');
+    }, 4000);
+
+    xrButton.addEventListener('click', function(e){
+      modelLink.click();
+    });
+  } else {
+    console.log('No GLTF model links found');
+  }
+}
+
 window.createIntentURI = createIntentURI;
 window.createWebARIntentURI = createWebARIntentURI;
 window.createARViewerIntentURI = createARViewerIntentURI;
 
 init();
-window.onload = process;
+
+window.addEventListener('load', process);
 
 })();
