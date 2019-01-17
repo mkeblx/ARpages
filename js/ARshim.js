@@ -222,7 +222,7 @@ function addXRButton() {
     setTimeout(function(){
       xrButton.style.display = 'block';
       console.log('XR button added to page');
-    }, 4000);
+    }, 2000);
 
     let href = modelLink.href;
     if (modelLink.dataset.scale)
